@@ -6,6 +6,8 @@ conda install -c conda-forge tesseract
 conda install -c conda-forge pytesseract
 conda install numpy
 conda install -c conda-forge opencv
+pip install manga109api
+conda install matplotlib
 ```
 
 Get Japanese tesseract from 
