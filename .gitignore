@@ -1,1 +1,3 @@
 /datasets/
+/ocr/model/
+/ocr/mask_rcnn_coco.h5

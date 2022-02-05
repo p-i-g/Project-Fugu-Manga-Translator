@@ -1,14 +1,20 @@
 # Project-Fugu-Manga-Translator
+
+Instructions:
+
+Install CUDA version 11.2 and cuDNN version 8.1.0
+
 Run the project in a new conda environment.
 
 ```
-conda install -c conda-forge tesseract
-conda install -c conda-forge pytesseract
-conda install numpy
-conda install -c conda-forge opencv
+pip install tensorflow
 pip install manga109api
-conda install matplotlib
+pip install matplotlib
+pip install opencv-python
+pip install -U scikit-image==0.16.2
 ```
+
+Ignore the parts below for now
 
 Get Japanese tesseract from 
 
