@@ -902,7 +902,7 @@ def rpn_graph(feature_map, anchors_per_location, anchor_stride):
 def build_rpn_model(anchor_stride, anchors_per_location, depth):
     """Builds a Keras model of the Region Proposal Network.
     It wraps the RPN graph so it can be used multiple times with shared
-    weights.
+    model-weights.
 
     anchors_per_location: number of anchors per pixel in the feature map
     anchor_stride: Controls the density of anchors. Typically 1 (anchors for
@@ -1825,7 +1825,7 @@ class MaskRCNN(object):
         """
         mode: Either "training" or "inference"
         config: A Sub-class of the Config class
-        model_dir: Directory to save training logs and trained weights
+        model_dir: Directory to save training logs and trained model-weights
         """
         assert mode in ['training', 'inference']
         self.mode = mode
@@ -2124,7 +2124,7 @@ class MaskRCNN(object):
                 f = f['model_weights']
 
             # In multi-GPU training, we wrap the model. Get layers
-            # of the inner model because they have the weights.
+            # of the inner model because they have the model-weights.
             keras_model = self.keras_model
             layers = keras_model.inner_model.layers if hasattr(keras_model, "inner_model")\
                 else keras_model.layers
@@ -2142,8 +2142,8 @@ class MaskRCNN(object):
         self.set_log_dir(filepath)
 
     def get_imagenet_weights(self):
-        """Downloads ImageNet trained weights from Keras.
-        Returns path to weights file.
+        """Downloads ImageNet trained model-weights from Keras.
+        Returns path to model-weights file.
         """
         from keras.utils.data_utils import get_file
         TF_WEIGHTS_PATH_NO_TOP = 'https://github.com/fchollet/deep-learning-models/'\
@@ -2177,7 +2177,7 @@ class MaskRCNN(object):
             self.keras_model.add_loss(loss)
 
         # Add L2 Regularization
-        # Skip gamma and beta weights of batch normalization layers.
+        # Skip gamma and beta model-weights of batch normalization layers.
         reg_losses = [
             keras.regularizers.l2(self.config.WEIGHT_DECAY)(w) / tf.cast(tf.size(input=w), tf.float32)
             for w in self.keras_model.trainable_weights
@@ -2211,7 +2211,7 @@ class MaskRCNN(object):
         keras_model = keras_model or self.keras_model
 
         # In multi-GPU training, we wrap the model. Get layers
-        # of the inner model because they have the weights.
+        # of the inner model because they have the model-weights.
         layers = keras_model.inner_model.layers if hasattr(keras_model, "inner_model")\
             else keras_model.layers
 
@@ -2458,7 +2458,7 @@ class MaskRCNN(object):
         boxes = utils.denorm_boxes(boxes, original_image_shape[:2])
 
         # Filter out detections with zero area. Happens in early training when
-        # network weights are still random
+        # network model-weights are still random
         exclude_ix = np.where(
             (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1]) <= 0)[0]
         if exclude_ix.shape[0] > 0:
@@ -2648,20 +2648,20 @@ class MaskRCNN(object):
     def find_trainable_layer(self, layer):
         """If a layer is encapsulated by another layer, this function
         digs through the encapsulation and returns the layer that holds
-        the weights.
+        the model-weights.
         """
         if layer.__class__.__name__ == 'TimeDistributed':
             return self.find_trainable_layer(layer.layer)
         return layer
 
     def get_trainable_layers(self):
-        """Returns a list of layers that have weights."""
+        """Returns a list of layers that have model-weights."""
         layers = []
         # Loop through all layers
         for l in self.keras_model.layers:
             # If layer is a wrapper, find inner trainable layer
             l = self.find_trainable_layer(l)
-            # Include layer if it has weights
+            # Include layer if it has model-weights
             if l.get_weights():
                 layers.append(l)
         return layers

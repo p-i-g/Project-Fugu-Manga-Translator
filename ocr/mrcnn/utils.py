@@ -23,7 +23,7 @@ import shutil
 import warnings
 from distutils.version import LooseVersion
 
-# URL from which to download the latest COCO trained weights
+# URL from which to download the latest COCO trained model-weights
 COCO_MODEL_URL = "https://github.com/matterport/Mask_RCNN/releases/download/v2.0/mask_rcnn_coco.h5"
 
 
@@ -838,9 +838,9 @@ def batch_slice(inputs, graph_fn, batch_size, names=None):
 
 
 def download_trained_weights(coco_model_path, verbose=1):
-    """Download COCO trained weights from Releases.
+    """Download COCO trained model-weights from Releases.
 
-    coco_model_path: local path of COCO trained weights
+    coco_model_path: local path of COCO trained model-weights
     """
     if verbose > 0:
         print("Downloading pretrained model to " + coco_model_path + " ...")
