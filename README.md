@@ -14,6 +14,8 @@ pip install opencv-python
 pip install -U scikit-image==0.16.2
 ```
 
+`mrcnn.visualize.apply_mask()` was edited to work on grayscale images
+
 Ignore the parts below for now
 
 Get Japanese tesseract from 
