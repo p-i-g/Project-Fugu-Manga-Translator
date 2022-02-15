@@ -29,8 +29,6 @@ from mrcnn import utils
 from distutils.version import LooseVersion
 assert LooseVersion(tf.__version__) >= LooseVersion("2.0")
 
-tf.compat.v1.disable_eager_execution()
-
 ############################################################
 #  Utility Functions
 ############################################################
@@ -1214,7 +1212,7 @@ def mrcnn_mask_loss_graph(target_masks, target_class_ids, pred_masks):
 #  Data Generator
 ############################################################
 
-def load_image_gt(dataset, config, image_id, augmentation=None):
+def load_image_gt(dataset, config, image_id, augmentation=None, use_mini_mask=True):
     """Load and return ground truth data for an image (image, mask, bounding boxes).
 
     augmentation: Optional. An imgaug (https://github.com/aleju/imgaug) augmentation.
@@ -1291,7 +1289,7 @@ def load_image_gt(dataset, config, image_id, augmentation=None):
     active_class_ids[source_class_ids] = 1
 
     # Resize masks to smaller size to reduce memory usage
-    if config.USE_MINI_MASK:
+    if use_mini_mask:
         mask = utils.minimize_mask(bbox, mask, config.MINI_MASK_SHAPE)
 
     # Image meta data
@@ -2481,9 +2479,7 @@ class MaskRCNN(object):
 
     def detect(self, images, verbose=0):
         """Runs the detection pipeline.
-
         images: List of images, potentially of different sizes.
-
         Returns a list of dicts, one dict per image. The dict contains:
         rois: [N, (y1, x1, y2, x2)] detection bounding boxes
         class_ids: [N] int class IDs
@@ -2536,6 +2532,7 @@ class MaskRCNN(object):
                 "masks": final_masks,
             })
         return results
+
 
     def detect_molded(self, molded_images, image_metas, verbose=0):
         """Runs the detection pipeline, but expect inputs that are

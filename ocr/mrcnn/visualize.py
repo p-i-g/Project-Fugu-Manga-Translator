@@ -73,9 +73,7 @@ def apply_mask(image, mask, color, alpha=0.5):
     """Apply the given mask to the image.
     """
 
-    # this part was edited
-
-    for c in range(1):
+    for c in range(3):
         image[:, :, c] = np.where(mask == 1,
                                   image[:, :, c] *
                                   (1 - alpha) + alpha * color[c] * 255,
@@ -168,6 +166,7 @@ def display_instances(image, boxes, masks, class_ids, class_names,
     ax.imshow(masked_image.astype(np.uint8))
     if auto_show:
         plt.show()
+
 
 
 def display_differences(image,
