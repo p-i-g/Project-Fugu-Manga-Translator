@@ -1,6 +1,6 @@
 from mrcnn.config import Config
 import mrcnn.model as modellib
-import cv2
+import skimage
 from mrcnn.model import log
 from mrcnn import visualize
 
@@ -43,7 +43,7 @@ class SegmentationModel:
 
 if __name__ == "__main__":
     model = SegmentationModel(model_dir="model")
-    original_image = cv2.imread("../datasets/Manga109/Manga109_released_2021_12_30/images/AisazuNihaIrarenai/004.jpg")
+    original_image = skimage.io.imread("../datasets/Manga109/Manga109_released_2021_12_30/images/AisazuNihaIrarenai/004.jpg")
     results = model.detect([original_image], verbose=1)
     r = results[0]
 
