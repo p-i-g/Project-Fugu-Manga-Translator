@@ -6,6 +6,7 @@ from segmentation import segmentation as seg
 seg_model = seg.SegmentationModel("../segmentation/model")
 
 
+# This is here so that the model can be loaded
 class Autoencoder(tf.keras.Model):
     def __init__(self):
         super(Autoencoder, self).__init__()
