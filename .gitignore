@@ -1,3 +1,4 @@
 /datasets/
-/ocr/model/
+/segmentation/model/
 /model-weights/mask_rcnn_coco.h5
+/autoencoder/model/

@@ -1,9 +1,9 @@
 from tensorflow.keras import layers
 import tensorflow as tf
-from ocr.mrcnn.utils import resize_image
-from ocr import segmentation as seg
+from segmentation.mrcnn import resize_image
+from segmentation import segmentation as seg
 
-seg_model = seg.SegmentationModel("../ocr/model")
+seg_model = seg.SegmentationModel("../segmentation/model")
 
 
 class Autoencoder(tf.keras.Model):
