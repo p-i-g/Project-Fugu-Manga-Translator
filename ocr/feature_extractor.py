@@ -1,4 +1,3 @@
-from tensorflow import keras
 import keras.layers as KL
 from keras.layers import BatchNormalization
 import keras.models as KM
