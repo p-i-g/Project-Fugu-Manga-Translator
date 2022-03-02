@@ -12,7 +12,7 @@ class ResNet():
 
     def build(self):
         input_image = KL.Input(
-            shape=[config.IMAGE_SHAPE[0], config.IMAGE_SHAPE[1], self.config.IMAGE_SHAPE[2]], name="input_image")
+            shape=[self.config.IMAGE_SHAPE[0], self.config.IMAGE_SHAPE[1], self.config.IMAGE_SHAPE[2]], name="input_image")
         output = resnet_graph(input_image, self.config.RESNET_ARCHITECTURE, stage5=True, train_bn=self.config.TRAIN_BN)[4]
         return KM.Model(inputs=input_image, outputs=output, name=self.config.RESNET_ARCHITECTURE)
 
