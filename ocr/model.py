@@ -19,9 +19,9 @@ class Model(KM.Model):
         self.FeatureExtraction_output = opt.output_channel  # int(imgH/16-1) * 512
         self.AdaptiveAvgPool = KL.GlobalAvgPool2D(data_format='channels_first')  # Transform final (imgH/16-1) -> 1
 
-        self.SequenceModeling = keras.Sequential(
+        self.SequenceModeling = keras.Sequential([
             BidirectionalLSTM(self.FeatureExtraction_output, opt.hidden_size),
-            BidirectionalLSTM(opt.hidden_size, opt.hidden_size))
+            BidirectionalLSTM(opt.hidden_size, opt.hidden_size)])
         self.SequenceModeling_output = opt.hidden_size
 
         self.Prediction = Attention(None, self.SequenceModeling_output, opt.hidden_size, opt.num_class, opt.batch_max_length)
