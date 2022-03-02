@@ -1,5 +1,6 @@
 from requests import Response
 from typing import Union, Dict, List
+import json
 
 class ApiError(Exception):
     def __init__(self, resp : Union[Response, dict], message = "The api responded with the error") -> None:
@@ -12,7 +13,8 @@ class ApiError(Exception):
 
         self.message = message
         super().__init__(self.message)
-        self.details = self.resp.text["detail"]
+        print(json.loads(self.resp.text))
+        self.details = json.loads(self.resp.text)
     def __str__(self) -> str:
         return f"{self.message}: {self.code} \n {self.details}"
 
