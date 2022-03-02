@@ -26,7 +26,7 @@ class BidirectionalLSTM(KM.Model):
         input : visual feature [batch_size x T x input_size]
         output : contextual feature [batch_size x T x output_size]
         """
-        recurrent = self.rnn(input)
+        recurrent = self.rnn(inputs)
         output = self.linear(recurrent)
         return output
 
