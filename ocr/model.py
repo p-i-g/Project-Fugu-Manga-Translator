@@ -25,7 +25,7 @@ class Model(KM.Model):
 
         self.Prediction = Attention(self.SequenceModeling_output, opt.hidden_size, opt.num_class, opt.num_class, opt.batch_max_length)
 
-    def forward(self, input, text, is_train=True):
+    def call(self, input, is_train=True):
         """ Transformation stage """
         input = self.Transformation(input)
 
@@ -38,7 +38,7 @@ class Model(KM.Model):
         contextual_feature = self.SequenceModeling(visual_feature)
 
         """ Prediction stage """
-        prediction = self.Prediction(contextual_feature, text, is_train,
+        prediction = self.Prediction(contextual_feature, is_train,
                                      batch_max_length=self.opt.batch_max_length)
 
         return prediction
