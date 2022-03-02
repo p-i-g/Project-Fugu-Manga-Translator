@@ -6,7 +6,7 @@ from sequence_modeling import BidirectionalLSTM
 from feature_extractor import ResNet
 from transformation import TPS_SpatialTransFormerNetwork
 import tensorflow as tf
-
+from config import Config
 class Model(KM.Model):
     def __init__(self, opt):
         super(Model, self).__init__()
@@ -14,7 +14,7 @@ class Model(KM.Model):
         self.Transformation = TPS_SpatialTransFormerNetwork(
             F=opt.num_fiducial, I_size=(opt.imgH, opt.imgW), I_r_size=(opt.imgH, opt.imgW),
             I_channel_num=opt.input_channel)
-        self.FeatureExtraction = ResNet((opt.input_channel, opt.output_channel)).build()
+        self.FeatureExtraction = ResNet(Config()).model
         self.FeatureExtraction_output = opt.output_channel  # int(imgH/16-1) * 512
         self.AdaptiveAvgPool = KL.GlobalAvgPool2D(data_format='channels_first')  # Transform final (imgH/16-1) -> 1
 
