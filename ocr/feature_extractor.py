@@ -29,6 +29,7 @@ def identity_block(input_tensor, kernel_size, filters, stage, block,
         use_bias: Boolean. To use or not use a bias in conv layers.
         train_bn: Boolean. Train or freeze Batch Norm layers
     """
+    print(input_tensor.shape)
     nb_filter1, nb_filter2, nb_filter3 = filters
     conv_name_base = 'res' + str(stage) + block + '_branch'
     bn_name_base = 'bn' + str(stage) + block + '_branch'
@@ -49,6 +50,7 @@ def identity_block(input_tensor, kernel_size, filters, stage, block,
 
     x = KL.Add()([x, input_tensor])
     x = KL.Activation('relu', name='res' + str(stage) + block + '_out')(x)
+    print(x.shape)
     return x
 
 
