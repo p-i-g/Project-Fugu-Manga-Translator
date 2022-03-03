@@ -18,7 +18,7 @@ class BidirectionalLSTM(KM.Model):
         super().__init__(*args, **kwargs)
         self.hidden_size = hidden_size
         self.output_size = output_size
-        self.rnn = KL.Bidirectional(KL.LSTM(hidden_size))
+        self.rnn = KL.Bidirectional(KL.LSTM(hidden_size, return_sequences=True))
         self.linear = KL.Dense(output_size)
 
     def call(self, inputs, training=None, mask=None):
