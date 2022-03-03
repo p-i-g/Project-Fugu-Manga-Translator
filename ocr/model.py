@@ -17,10 +17,9 @@ class Model(KM.Model):
             I_channel_num=opt.input_channel)
         self.FeatureExtraction = ResNet(Config()).model
         self.FeatureExtraction_output = opt.output_channel  # int(imgH/16-1) * 512
-        self.AdaptiveAvgPool = KL.GlobalAvgPool2D(data_format='channels_first')  # Transform final (imgH/16-1) -> 1
-
+        self.AdaptiveAvgPool = KL.GlobalAveragePooling2D(data_format='channels_last', keepdims=True)  # Transform final (imgH/16-1) -> 1
         self.SequenceModeling = keras.Sequential([
-            BidirectionalLSTM(self.FeatureExtraction_output, opt.hidden_size),
+            BidirectionalLSTM(opt.hidden_size, opt.hidden_size),
             BidirectionalLSTM(opt.hidden_size, opt.hidden_size)])
         self.SequenceModeling_output = opt.hidden_size
 
@@ -29,12 +28,10 @@ class Model(KM.Model):
     def call(self, input, is_train=True, **kwargs):
         """ Transformation stage """
         input = self.Transformation(input)
-
         """ Feature extraction stage """
         visual_feature = self.FeatureExtraction(input)
-        visual_feature = self.AdaptiveAvgPool(visual_feature[np.newaxis])#.permute(0, 3, 1, 2))  # [b, c, h, w] -> [b, w, c, h]
-        visual_feature = tf.squeeze(visual_feature)
-
+        visual_feature = self.AdaptiveAvgPool(visual_feature)#.permute(0, 3, 1, 2))  # [b, c, h, w] -> [b, w, c, h]
+        visual_feature = tf.squeeze(visual_feature, [2])
         """ Sequence modeling stage """
         contextual_feature = self.SequenceModeling(visual_feature)
 

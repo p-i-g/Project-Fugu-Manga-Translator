@@ -268,10 +268,8 @@ class GridGenerator:
     def build_P_prime(self, batch_C_prime):
         """ Generate Grid from batch_C_prime [batch_size x F x 2] """
         batch_size = tf.shape(batch_C_prime)[0]
-        print(self.inv_delta_C.shape)
         batch_inv_delta_C = tf.tile(self.inv_delta_C, [batch_size, 1, 1])
         batch_P_hat = tf.tile(self.P_hat, [batch_size, 1, 1])
-        print(batch_inv_delta_C.shape)
         batch_C_prime_with_zeros = tf.concat([batch_C_prime, tf.zeros(
             [batch_size, 3, 2])], axis=1)  # batch_size x F+3 x 2
         batch_T = tf.linalg.matmul(batch_inv_delta_C, batch_C_prime_with_zeros)  # batch_size x F+3 x 2

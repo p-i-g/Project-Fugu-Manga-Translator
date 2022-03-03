@@ -13,7 +13,7 @@ class ResNet():
     def build(self):
         input_image = KL.Input(
             shape=[self.config.IMAGE_SHAPE[0], self.config.IMAGE_SHAPE[1], self.config.IMAGE_SHAPE[2]], name="input_image")
-        output = resnet_graph(input_image, self.config.RESNET_ARCHITECTURE, stage5=True, train_bn=self.config.TRAIN_BN)[4]
+        output = resnet_graph(input_image, self.config.RESNET_ARCHITECTURE, stage5=True, train_bn=self.config.TRAIN_BN)
         return KM.Model(inputs=input_image, outputs=output, name=self.config.RESNET_ARCHITECTURE)
 
 
@@ -29,7 +29,6 @@ def identity_block(input_tensor, kernel_size, filters, stage, block,
         use_bias: Boolean. To use or not use a bias in conv layers.
         train_bn: Boolean. Train or freeze Batch Norm layers
     """
-    print(input_tensor.shape)
     nb_filter1, nb_filter2, nb_filter3 = filters
     conv_name_base = 'res' + str(stage) + block + '_branch'
     bn_name_base = 'bn' + str(stage) + block + '_branch'
@@ -50,7 +49,6 @@ def identity_block(input_tensor, kernel_size, filters, stage, block,
 
     x = KL.Add()([x, input_tensor])
     x = KL.Activation('relu', name='res' + str(stage) + block + '_out')(x)
-    print(x.shape)
     return x
 
 
@@ -130,7 +128,6 @@ def resnet_graph(input_image, architecture, stage5=False, train_bn=True):
         x = identity_block(x, 3, [512, 512, 2048], stage=5, block='c', train_bn=train_bn)
     else:
         C5 = None
-
     return x
 
 
