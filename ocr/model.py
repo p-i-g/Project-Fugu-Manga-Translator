@@ -31,7 +31,8 @@ class Model(KM.Model):
         """ Feature extraction stage """
         visual_feature = self.FeatureExtraction(input)
         visual_feature = self.AdaptiveAvgPool(visual_feature)#.permute(0, 3, 1, 2))  # [b, c, h, w] -> [b, w, c, h]
-        visual_feature = tf.squeeze(visual_feature, [2])
+        visual_feature = tf.squeeze(visual_feature, axis=[1])
+        print(visual_feature.shape, "test")
         """ Sequence modeling stage """
         contextual_feature = self.SequenceModeling(visual_feature)
 
