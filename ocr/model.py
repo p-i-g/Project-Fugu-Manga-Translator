@@ -24,6 +24,7 @@ class Model(KM.Model):
         self.SequenceModeling_output = opt.hidden_size
 
         self.Prediction = Attention(None, self.SequenceModeling_output, opt.hidden_size, opt.num_class, opt.batch_max_length)
+        self.opt = opt
 
     def call(self, input, is_train=True, **kwargs):
         """ Transformation stage """
