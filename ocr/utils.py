@@ -36,7 +36,7 @@ class AttnLabelConverter(object):
             text.append('[s]')
             text = [self.dict[char] for char in text]
             batch_text[i][1:1 + len(text)] = tf.convert_to_tensor(text)  # batch_text[:, 0] = [GO] token
-        return (batch_text, tf.constant(length))
+        return batch_text, tf.constant(length)
 
     def decode(self, text_index, length):
         """ convert text-index into text-label. """
