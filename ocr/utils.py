@@ -19,24 +19,21 @@ class AttnLabelConverter(object):
     def encode(self, text, batch_max_length=25):
         """ convert text-label into text-index.
         input:
-            text: text labels of each image. [batch_size]
+            text: text labels of each image.
             batch_max_length: max length of text label in the batch. 25 by default
         output:
             text : the input of attention decoder. [batch_size x (max_length+2)] +1 for [GO] token and +1 for [s] token.
                 text[:, 0] is [GO] token and text is padded with [GO] token after [s] token.
-            length : the length of output of attention decoder, which count [s] token also. [3, 7, ....] [batch_size]
         """
-        length = [len(s) + 1 for s in text]  # +1 for [s] at end of sentence.
         # batch_max_length = max(length) # this is not allowed for multi-gpu setting
         batch_max_length += 1
         # additional +1 for [GO] at first step. batch_text is padded with [GO] token after [s] token.
-        batch_text = tf.zeros([len(text), batch_max_length + 1], dtype=tf.dtypes.int64)
-        for i, t in enumerate(text):
-            text = list(t)
-            text.append('[s]')
-            text = [self.dict[char] for char in text]
-            batch_text[i][1:1 + len(text)] = tf.convert_to_tensor(text)  # batch_text[:, 0] = [GO] token
-        return batch_text, tf.constant(length)
+        text_ = tf.zeros(batch_max_length + 1, dtype=tf.dtypes.int64)
+        text = list(text)
+        text.append('[s]')
+        text = [self.dict[char] for char in text]
+        text_[1:1 + len(text)] = tf.convert_to_tensor(text, dtype=tf.dtypes.int64)  # batch_text[:, 0] = [GO] token
+        return text_
 
     def decode(self, text_index, length):
         """ convert text-index into text-label. """

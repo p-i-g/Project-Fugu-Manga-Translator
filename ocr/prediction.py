@@ -48,7 +48,7 @@ class Attention(KM.Model):
         """
         batch_H = inputs[0]
         text = inputs[1]
-        batch_size = batch_H.shape[0]
+        batch_size = tf.shape(batch_H)[0]
         num_steps = self.batch_max_length + 1  # +1 for [s] at end of sentence.
         output_hiddens_list = []
 
