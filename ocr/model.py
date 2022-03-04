@@ -46,10 +46,10 @@ class Model(KM.Model):
         return prediction
 
     def train_step(self, data):
-        x, y = data
+        x, text, y = data
 
         with tf.GradientTape() as tape:
-            y_pred = self([x, y], training=True)  # Forward pass
+            y_pred = self([x, text], training=True)  # Forward pass
             # Compute the loss value
             loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
         trainable_vars = self.trainable_variables
