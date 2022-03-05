@@ -2,3 +2,5 @@ https://github.com/xyntechx/Manga-Layout-Analysis
 https://nanonets.com/blog/ocr-with-tesseract/
 https://towardsdatascience.com/mask-rcnn-implementation-on-a-custom-dataset-fd9a878123d4
 https://github.com/matterport/Mask_RCNN/blob/master/samples/demo.ipynb
+https://github.com/tensorflow/tensorflow/issues/14132#issuecomment-483002522
+https://github.com/clovaai/deep-text-recognition-benchmark/
