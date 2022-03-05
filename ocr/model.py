@@ -33,36 +33,27 @@ class Model(KM.Model):
         """ Transformation stage """
         input, text = input[0], input[1]
         input = self.Transformation(input)
-        print("transformation done")
         """ Feature extraction stage """
         visual_feature = self.FeatureExtraction(input)
         visual_feature = self.AdaptiveAvgPool(visual_feature)  # .permute(0, 3, 1, 2))  # [b, c, h, w] -> [b, w, c, h]
         visual_feature = tf.squeeze(visual_feature, axis=[1])
-        print("feature extraction done")
         """ Sequence modeling stage """
         contextual_feature = self.SequenceModeling(visual_feature)
-        print("sequence modelling done")
 
         """ Prediction stage """
         prediction = self.Prediction((contextual_feature, text), is_train)
-        print("prediction done")
 
         return prediction
 
     def train_step(self, data):
-        print("start step")
         x, text, y = data
 
         with tf.GradientTape() as tape:
             y_pred = self([x, text], training=True)  # Forward pass
             # Compute the loss value
             loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
-            print("loss calculated")
         trainable_vars = self.trainable_variables
         gradients = tape.gradient(loss, trainable_vars)
-        print("gradient calculated")
         self.optimizer.apply_gradients(zip(gradients, trainable_vars))
-        print("gradient applied")
         self.compiled_metrics.update_state(y, y_pred)
-        print("step done")
         return {m.name: m.result() for m in self.metrics}
