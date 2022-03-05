@@ -31,8 +31,15 @@ class AttnLabelConverter(object):
         text_ = tf.zeros(batch_max_length + 1, dtype=tf.dtypes.int64)
         text = list(text)
         text.append('[s]')
+        mask = [0] * (batch_max_length + 1)
+        mask[1:1 + len(text)] = [1] * len(text)
         text = [self.dict[char] for char in text]
-        text_[1:1 + len(text)] = tf.convert_to_tensor(text, dtype=tf.dtypes.int64)  # batch_text[:, 0] = [GO] token
+        text = [0] + text + [0] * (batch_max_length - len(text))
+        mask = tf.convert_to_tensor(mask, dtype=tf.dtypes.int64)
+        text = tf.convert_to_tensor(text, dtype=tf.dtypes.int64)
+        tmp1 = tf.math.multiply(mask, text)
+        tmp2 = tf.math.multiply(1 - mask, text_)
+        text_ = tmp1 + tmp2  # batch_text[:, 0] = [GO] token
         return text_
 
     def decode(self, text_index, length):
