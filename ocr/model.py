@@ -29,6 +29,7 @@ class Model(KM.Model):
         self.Prediction = Attention(None, self.SequenceModeling_output, opt.hidden_size, opt.num_class,
                                     opt.batch_max_length)
         self.opt = opt
+        self.optimizer = KO.Adadelta()
 
     def call(self, input, is_train=True, **kwargs):
         """ Transformation stage """
@@ -48,13 +49,12 @@ class Model(KM.Model):
 
     def train_step(self, data):
         x, text, y = data
-        optimizer = KO.Adadelta()
         with tf.GradientTape() as tape:
             y_pred = self([x, text], training=True)  # Forward pass
             # Compute the loss value
             loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
             trainable_vars = self.trainable_variables
             gradients = tape.gradient(loss, trainable_vars)
-            optimizer.apply_gradients(zip(gradients, trainable_vars))
+            self.optimizer.apply_gradients(zip(gradients, trainable_vars))
             self.compiled_metrics.update_state(y, y_pred)
             return {m.name: m.result() for m in self.metrics}
