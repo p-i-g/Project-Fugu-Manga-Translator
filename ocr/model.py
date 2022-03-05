@@ -7,6 +7,7 @@ from feature_extractor import ResNet
 from transformation import TPS_SpatialTransFormerNetwork
 import tensorflow as tf
 from config import Config
+import tensorflow.keras.optimizers as KO
 
 
 class Model(KM.Model):
@@ -47,13 +48,13 @@ class Model(KM.Model):
 
     def train_step(self, data):
         x, text, y = data
-
+        optimizer = KO.Adadelta()
         with tf.GradientTape() as tape:
             y_pred = self([x, text], training=True)  # Forward pass
             # Compute the loss value
             loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
-        trainable_vars = self.trainable_variables
-        gradients = tape.gradient(loss, trainable_vars)
-        self.optimizer.apply_gradients(zip(gradients, trainable_vars))
-        self.compiled_metrics.update_state(y, y_pred)
-        return {m.name: m.result() for m in self.metrics}
+            trainable_vars = self.trainable_variables
+            gradients = tape.gradient(loss, trainable_vars)
+            optimizer.apply_gradients(zip(gradients, trainable_vars))
+            self.compiled_metrics.update_state(y, y_pred)
+            return {m.name: m.result() for m in self.metrics}
