@@ -31,9 +31,10 @@ class Model(KM.Model):
         self.opt = opt
         self.optimizer = KO.Adam(clipnorm = 5.0)
 
-    def call(self, input, is_train=True, **kwargs):
+    def call(self, input, is_train=False, **kwargs):
         """ Transformation stage """
-        input, text = input[0], input[1]
+        if(is_train):
+            input, text = input[0], input[1]
         input = self.Transformation(input)
         """ Feature extraction stage """
         visual_feature = self.FeatureExtraction(input)
@@ -43,14 +44,18 @@ class Model(KM.Model):
         contextual_feature = self.SequenceModeling(visual_feature)
 
         """ Prediction stage """
-        prediction = self.Prediction((contextual_feature, text), is_train)
+        if (is_train):
+            prediction = self.Prediction((contextual_feature, text), is_train)
+        else:
+            self.Prediction(contextual_feature, is_train)
 
         return prediction
 
     def train_step(self, data):
+        print("train")
         x, text, y = data
         with tf.GradientTape() as tape:
-            y_pred = self([x, text], training=True)  # Forward pass
+            y_pred = self([x, text], is_train = True, training=True)  # Forward pass
             # Compute the loss value
             loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
             trainable_vars = self.trainable_variables
@@ -58,3 +63,8 @@ class Model(KM.Model):
             self.optimizer.apply_gradients(zip(gradients, trainable_vars))
             self.compiled_metrics.update_state(y, y_pred)
             return {m.name: m.result() for m in self.metrics}
+
+    def predict_step(self, data):
+        print("predict")
+        x = data
+        return self(x, is_train = False)
