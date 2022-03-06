@@ -62,7 +62,7 @@ class Attention(KM.Model):
                 # print(hidden.shape, batch_H.shape, char_onehots.shape)
                 hidden, alpha = self.attention_cell([hidden, batch_H, char_onehots])
                 output_hiddens_list.append(hidden[0])  # LSTM hidden index (0: hidden, 1: Cell)
-            output_hiddens = tf.stack(output_hiddens_list, axis = 1)
+            output_hiddens = tf.stack(output_hiddens_list, axis=1)
             probs = self.generator(output_hiddens)
 
         else:
@@ -74,10 +74,11 @@ class Attention(KM.Model):
                 hidden, alpha = self.attention_cell([hidden, batch_H, char_onehots])
                 probs_step = self.generator(hidden[0])
                 probs_list.append(probs_step)
-                _, next_input = tf.math.reduce_max(probs_step)
+                next_input = tf.math.argmax(probs_step, axis=1)
                 targets = next_input
+            probs = tf.stack(probs_list, axis=1)
 
-        return tf.stack(probs_list, axis=1)  # batch_size x num_steps x num_classes
+        return probs  # batch_size x num_steps x num_classes
 
 
 class AttentionCell(KM.Model):
