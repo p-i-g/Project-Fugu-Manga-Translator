@@ -67,17 +67,17 @@ class Attention(KM.Model):
 
         else:
             targets = tf.zeros(batch_size, dtype=tf.dtypes.int64)  # [GO] token
-            probs = tf.zeros([batch_size, num_steps, self.num_classes])
+            probs_list = []
 
             for i in range(num_steps):
                 char_onehots = self._char_to_onehot(targets, onehot_dim=self.num_classes)
                 hidden, alpha = self.attention_cell([hidden, batch_H, char_onehots])
                 probs_step = self.generator(hidden[0])
-                probs[:, i, :] = probs_step
+                probs_list.append(probs_step)
                 _, next_input = probs_step.max(1)
                 targets = next_input
 
-        return probs  # batch_size x num_steps x num_classes
+        return tf.stack(probs_list, axis=1)  # batch_size x num_steps x num_classes
 
 
 class AttentionCell(KM.Model):

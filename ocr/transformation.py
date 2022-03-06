@@ -151,25 +151,25 @@ class LocalizationNetwork(KM.Model):
         self.I_channel_num = I_channel_num
         self.conv = KM.Sequential([KL.Conv2D(filters=64, kernel_size=(3, 3), strides=1, padding="same", use_bias=False),
                                    KL.BatchNormalization(),
-                                   KL.ReLU(),
+                                   KL.LeakyReLU(0.1),
                                    KL.MaxPooling2D(pool_size=(2, 2)),
                                    KL.Conv2D(filters=128, kernel_size=(3, 3), strides=1, padding="same",
                                              use_bias=False),
                                    KL.BatchNormalization(),
-                                   KL.ReLU(),
+                                   KL.LeakyReLU(0.1),
                                    KL.MaxPooling2D(pool_size=(2, 2)),
                                    KL.Conv2D(filters=256, kernel_size=(3, 3), strides=1, padding="same",
                                              use_bias=False),
                                    KL.BatchNormalization(),
-                                   KL.ReLU(),
+                                   KL.LeakyReLU(0.1),
                                    KL.MaxPooling2D(pool_size=(2, 2)),
                                    KL.Conv2D(filters=512, kernel_size=(3, 3), strides=1, padding="same",
                                              use_bias=False),
                                    KL.BatchNormalization(),
-                                   KL.ReLU(),
+                                   KL.LeakyReLU(0.1),
                                    KL.GlobalAvgPool2D()
                                    ], name="conv")  # todo might have to change to channels last
-        self.localization_fc1 = KM.Sequential([KL.Dense(256), KL.ReLU()], name="localization_fc1")
+        self.localization_fc1 = KM.Sequential([KL.Dense(256), KL.LeakyReLU(0.1)], name="localization_fc1")
         self.localization_fc2 = KL.Dense(self.F * 2, name="localization_fc2")
 
         self.localization_fc2.build([None, 256])
