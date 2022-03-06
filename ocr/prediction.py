@@ -74,7 +74,7 @@ class Attention(KM.Model):
                 hidden, alpha = self.attention_cell([hidden, batch_H, char_onehots])
                 probs_step = self.generator(hidden[0])
                 probs_list.append(probs_step)
-                _, next_input = probs_step.max(1)
+                _, next_input = tf.math.reduce_max(probs_step)
                 targets = next_input
 
         return tf.stack(probs_list, axis=1)  # batch_size x num_steps x num_classes
