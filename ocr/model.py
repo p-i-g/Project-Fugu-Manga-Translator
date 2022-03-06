@@ -47,7 +47,7 @@ class Model(KM.Model):
         if (is_train):
             prediction = self.Prediction((contextual_feature, text), is_train)
         else:
-            self.Prediction(contextual_feature, is_train)
+            prediction = self.Prediction(contextual_feature, is_train)
 
         return prediction
 
