@@ -33,7 +33,7 @@ class Model(KM.Model):
 
     def call(self, input, is_train=False, **kwargs):
         """ Transformation stage """
-        if(is_train):
+        if is_train:
             input, text = input[0], input[1]
         input = self.Transformation(input)
         """ Feature extraction stage """
@@ -44,7 +44,7 @@ class Model(KM.Model):
         contextual_feature = self.SequenceModeling(visual_feature)
 
         """ Prediction stage """
-        if (is_train):
+        if is_train:
             prediction = self.Prediction((contextual_feature, text), is_train)
         else:
             prediction = self.Prediction(contextual_feature, is_train)
@@ -52,9 +52,9 @@ class Model(KM.Model):
         return prediction
 
     def train_step(self, data):
-        print("train")
         x, text, y = data
         with tf.GradientTape() as tape:
+            print("training yay")
             y_pred = self([x, text], is_train = True, training=True)  # Forward pass
             # Compute the loss value
             loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
@@ -65,6 +65,5 @@ class Model(KM.Model):
             return {m.name: m.result() for m in self.metrics}
 
     def predict_step(self, data):
-        print("predict")
         x = data
         return self(x, is_train = False)
