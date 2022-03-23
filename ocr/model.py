@@ -56,12 +56,12 @@ class Model(KM.Model):
     def train_step(self, data):
         x, text, y = data
         with tf.GradientTape() as tape:
-            print("training yay")
             y_pred = self([x, text], is_train = True, training=True)  # Forward pass
             # Compute the loss value
             loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
             trainable_vars = self.trainable_variables
             gradients = tape.gradient(loss, trainable_vars)
+            print(gradients)
             self.optimizer.apply_gradients(zip(gradients, trainable_vars))
             self.compiled_metrics.update_state(y, y_pred)
             return {m.name: m.result() for m in self.metrics}
