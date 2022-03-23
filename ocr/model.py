@@ -35,6 +35,8 @@ class Model(KM.Model):
         """ Transformation stage """
         if is_train:
             input, text = input[0], input[1]
+        else:
+            input, _ = input[0], input[1]
         input = self.Transformation(input)
         """ Feature extraction stage """
         visual_feature = self.FeatureExtraction(input)
@@ -66,11 +68,11 @@ class Model(KM.Model):
 
     def test_step(self, data):
         x, dummy, y = data
-        y_pred = self(x, training=False, is_train = False)
+        y_pred = self([x, dummy], training=False, is_train = False)
         self.compiled_loss(y, y_pred, regularization_losses=self.losses)
         self.compiled_metrics.update_state(y, y_pred)
         return {m.name: m.result() for m in self.metrics}
 
     def predict_step(self, data):
         x, dummy = data
-        return self(x, is_train = False)
+        return self([x, dummy], is_train = False, training = False)
