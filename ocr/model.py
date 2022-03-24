@@ -33,10 +33,7 @@ class Model(KM.Model):
 
     def call(self, input, is_train=False, **kwargs):
         """ Transformation stage """
-        if is_train:
-            input, text = input[0], input[1]
-        else:
-            input, _ = input[0], input[1]
+        input, text = input[0], input[1]
         input = self.Transformation(input)
         """ Feature extraction stage """
         visual_feature = self.FeatureExtraction(input)
@@ -49,7 +46,7 @@ class Model(KM.Model):
         if is_train:
             prediction = self.Prediction((contextual_feature, text), is_train)
         else:
-            prediction = self.Prediction(contextual_feature, is_train)
+            prediction = self.Prediction((contextual_feature, text), is_train)
 
         return prediction
 
@@ -61,7 +58,6 @@ class Model(KM.Model):
             loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
             trainable_vars = self.trainable_variables
             gradients = tape.gradient(loss, trainable_vars)
-            print(gradients)
             self.optimizer.apply_gradients(zip(gradients, trainable_vars))
             self.compiled_metrics.update_state(y, y_pred)
             return {m.name: m.result() for m in self.metrics}
