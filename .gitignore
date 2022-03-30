@@ -1,7 +1,7 @@
 /datasets/
 /segmentation/model/
 /model-weights/mask_rcnn_coco.h5
-/autoencoder/model/
+/archive/autoencoder/model/
 /ocr/model/
 /opus/
 /kabir-gay/

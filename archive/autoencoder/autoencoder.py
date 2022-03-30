@@ -3,7 +3,7 @@ import tensorflow as tf
 from segmentation.mrcnn import resize_image
 from segmentation import segmentation as seg
 
-seg_model = seg.SegmentationModel("../segmentation/model")
+seg_model = seg.SegmentationModel("../../segmentation/model")
 
 
 # This is here so that the model can be loaded
