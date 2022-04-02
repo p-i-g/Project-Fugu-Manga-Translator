@@ -13,6 +13,8 @@ pip install matplotlib
 pip install opencv-python
 pip install -U 'tensorflow-text==2.8.*'    
 pip install -U scikit-image==0.16.2
+pip install tensorflow-addons
+pip install adabelief-tf
 conda install -c conda-forge tesseract
 conda install -c conda-forge pytesseract
 ```
